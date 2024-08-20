@@ -1,0 +1,17 @@
+{
+  "name": "bee-shop",
+  "version": "1.0.0",
+  "description": "A spin-off of the bot Bee Economy. Buy and name bees, talk with others and play minigames for money.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Beontime",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.12.1",
+    "eslint": "^8.56.0",
+    "mysql2": "^3.9.3",
+    "sequelize": "^6.36.0"
+  }
+}
