@@ -118,7 +118,7 @@ client.on(Events.InteractionCreate, async interaction => {
         const responseMethod = interaction.followUp.bind(interaction);
 
         try {
-            concurrencyMiddleware(interaction, async () => { await command.execute(responseMethod, interaction, true, [], client); });
+            concurrencyMiddleware(interaction, async () => { await command.execute(responseMethod, interaction, [], client); });
         }
         catch (error) {
             console.error(error);
@@ -171,7 +171,7 @@ client.on(Events.MessageCreate, async (message) => {
 
         // Start - This is the easiest to maintain workaround I could think of for when a player hasn't started but wants to execute a command
         if (command === 'start') {
-            concurrencyMiddleware(message, async () => { await slashCommand.execute(responseMethod, message, false, args, client); });
+            concurrencyMiddleware(message, async () => { await slashCommand.execute(responseMethod, message, args, client); });
             return;
         }
 
@@ -179,7 +179,7 @@ client.on(Events.MessageCreate, async (message) => {
 
         // If the command exists, attempt to execute it as a text command with the supplied args (and the client in case the client needs to be called)
         if (slashCommand) {
-            concurrencyMiddleware(message, async () => { await slashCommand.execute(responseMethod, message, false, args, client); });
+            concurrencyMiddleware(message, async () => { await slashCommand.execute(responseMethod, message, args, client); });
             return;
         }
 
@@ -187,12 +187,12 @@ client.on(Events.MessageCreate, async (message) => {
         // Make sure the abbreviation calls the correct command
 
         if (command === 'p' || command === 'pr') {
-            concurrencyMiddleware(message, async () => { await client.commands.get('profile').execute(responseMethod, message, false, args, client); });
+            concurrencyMiddleware(message, async () => { await client.commands.get('profile').execute(responseMethod, message, args, client); });
             return;
         }
 
         else if (command === 'cf') {
-            concurrencyMiddleware(message, async () => { await client.commands.get('coinflip').execute(responseMethod, message, false, args, client); });
+            concurrencyMiddleware(message, async () => { await client.commands.get('coinflip').execute(responseMethod, message, args, client); });
             return;
         }
 

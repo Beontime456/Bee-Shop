@@ -143,10 +143,10 @@ module.exports = {
                     { name: 'Medium', value: 'medium' },
                     { name: 'Hard', value: 'hard' },
                 )),
-    async execute(responseMethod, interaction, isSlash, args) {
+    async execute(responseMethod, interaction, args) {
         // Determine if the command was inititated through slash
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
-        const mazeDifficulty = isSlash ? interaction.options.getString('difficulty') : args[0];
+        const interactionAuth = await interactionAuthFunc(interaction);
+        const mazeDifficulty = interaction.isCommand?.() ? interaction.options.getString('difficulty') : args[0];
         if (mazeDifficulty != 'easy' && mazeDifficulty != 'medium' && mazeDifficulty != 'hard') { return responseMethod('You need to choose one of the difficulty options (easy, medium, or hard)!'); }
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
         // Initialise the game and the required variables

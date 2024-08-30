@@ -4,3 +4,4 @@ config.json
 .vs
 data
 playerinfo.sqlite
+.eslintrc.json

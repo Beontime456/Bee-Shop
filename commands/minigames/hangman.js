@@ -80,8 +80,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('hangman')
 		.setDescription('Play a game of hangman.'),
-    async execute(responseMethod, interaction, isSlash) {
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+    async execute(responseMethod, interaction) {
+        const interactionAuth = await interactionAuthFunc(interaction);
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
         const startingMoney = findplayer.get('money');
         const { coins, xp } = await calculateAllBees(interactionAuth);

@@ -42,9 +42,9 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('guess')
 		.setDescription('Play a number guessing game.'),
-    async execute(responseMethod, interaction, isSlash) {
+    async execute(responseMethod, interaction) {
         // Determine if the command was inititated through slash
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+        const interactionAuth = await interactionAuthFunc(interaction);
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
         const startingMoney = findplayer.get('money');
 

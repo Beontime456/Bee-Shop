@@ -11,14 +11,12 @@ const {
     capitaliseWords,
     interactionAuthFunc,
     requestBeeFunc,
+    profanities,
 } = require('C:/Bee Shop/universalmodule.js');
 
 playerinformation.sync();
 playerbees.sync();
 beelist.sync();
-
-// Profanity filter
-const profanities = ['dick', 'sex', 'cum', 'porn', 'nude', 'hentai', 'fap', 'boobs', 'cummed', 'ballsack', 'cumming', 'fapped', 'fapping', 'vagina', 'erotica', 'fingering', 'g-spot', 'kock', 'vaginal', 'oral', 'titty', 'gore', 'anal', 'blowjob', 'handjob', 'boob', 'butthole', 'cocks', 'cumshot', 'cumshots', 'cunnilingus', 'dildo', 'doggystyle', 'nigga', 'nigger', 'bitches', 'rape', 'semen', 'testicles', 'titties', 'penis', 'creampie', 'onlyfans', 'faggot', 'cp', 'milf', 'r34', 'rule34', 'seduce', 'lewd', 'coems', 'cock', 'boner', 'ph', 'pornhub', 'slut', 'Whore', 'faggot', 'jack off', 'jacking off', 'orgasm', 'orgy', 'yiff', 'yaoi', 'smegma', 'condom', 'prick', 'urethra', 'bollocks', 'deepthroat', 'fornicating', 'erection', 'kink', 'hitler', '9/11', 'cunt', 'nazi', 'bukkake', 'fuck', 'fucking', 'shit', 'shitting', 'fucks', 'shits', 'retard'];
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -53,10 +51,10 @@ module.exports = {
             options.map(choice => ({ name: capitaliseWords(choice), value: choice })),
         );
     },
-	async execute(responseMethod, interaction, isSlash, args) {
+	async execute(responseMethod, interaction, args) {
         // Determine command execution type and therefore where arguments are stored
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
-        const requestbee = await requestBeeFunc(isSlash, interaction, args);
+        const interactionAuth = await interactionAuthFunc(interaction);
+        const requestbee = await requestBeeFunc(interaction, args);
         // Find the player and check if the bee they are trying to buy is in the shop or even exists
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
         const findBee = await beelist.findOne({ where: { beeName: requestbee.toLowerCase() } });
@@ -81,9 +79,7 @@ module.exports = {
             .setFooter({ text: beeFact() })
             .addFields({ name: `Are you sure you want to buy a ${capitaliseWords(requestbee)}?`, value: `Buying this bee costs ${findBee.get('beePrice')} money.` });
         const confirmMessage = await responseMethod({ embeds: [confirmembed], components: [row] });
-        const collectorFilter2 = i => {
-            return i.user.id === interactionAuth.id;
-        };
+        const collectorFilter2 = i => { return i.user.id === interactionAuth.id; };
         await confirmMessage.awaitMessageComponent({ filter: collectorFilter2, time: 15000 })
         // What happens when a button press makes it past the filter
         .then(async j => {

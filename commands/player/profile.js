@@ -21,13 +21,14 @@ module.exports = {
 		.setName('profile')
 		.setDescription('Check out your stats.')
         .addUserOption(option => option.setName('user').setDescription('Check another players stats')),
-	async execute(responseMethod, interaction, isSlash, args, client) {
+	async execute(responseMethod, interaction, args, client) {
         try {
             // Checks if the command was initiated through slash or text.
-            const interactionAuth = await interactionAuthFunc(isSlash, interaction);
-            const requestplayer = await requestPlayerFunc(isSlash, interaction, args, client, interactionAuth);
+            const interactionAuth = await interactionAuthFunc(interaction);
+            const requestplayer = await requestPlayerFunc(interaction, args, client, interactionAuth);
             // Creates the player embed, displaying important info about another player
             const findTarget = await playerinformation.findOne({ where: { playerid: requestplayer.id } });
+            if (!findTarget) return responseMethod('This player has not started!');
             const { coins, xp, prestiges } = await calculateAllBees(interactionAuth);
             const profileembed = new EmbedBuilder()
                 .setColor(0xffe521)
@@ -50,10 +51,7 @@ module.exports = {
             responseMethod({ embeds: [profileembed] });
         }
         catch (error) {
-            if (error.name === 'TypeError') {
-                responseMethod('This player has not started!');
-            }
-            else if (error.name === 'DiscordAPIError[10013]') {
+            if (error.name === 'DiscordAPIError[10013]' || error.name === 'DiscordAPIError[50035]') {
                 responseMethod('Please mention a player!');
             }
             else {

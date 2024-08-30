@@ -118,24 +118,27 @@ const increaseTypeSuffixMap = {
     'multiply-p': 'Prestige(s)',
 };
 
-async function interactionAuthFunc(isSlash, interaction) {
-    return isSlash ? interaction.user : interaction.author;
+async function interactionAuthFunc(interaction) {
+    return interaction.isCommand?.() ? interaction.user : interaction.author;
 }
 
-async function requestPlayerFunc(isSlash, interaction, args, client, interactionAuth) {
-    return isSlash
+async function requestPlayerFunc(interaction, args, client, interactionAuth) {
+    return interaction.isCommand?.()
     ? interaction.options.getUser('user') || interactionAuth
     : await client.users.fetch(args.length > 0 ? args[0].replace(/[\\<>@#&!]/g, '') : interactionAuth.id);
 }
 
-async function requestBeeFunc(isSlash, interaction, args) {
-    return isSlash ? interaction.options.getString('name') : args.join(' ');
+async function requestBeeFunc(interaction, args) {
+    return interaction.isCommand?.() ? interaction.options.getString('name') : args.join(' ');
 }
 
 // Make sure a bee name does not contain illegal characters outside of letters a-z and punctuation.
 function checkNameCompliance(name) {
     return /^(?!.*[@:#])[a-zA-Z0-9\s_.,!$%^&*()+=\-[\]{};'"<>?\\|`~/]+$/.test(name);
 }
+
+// Profanity filter
+const profanities = ['dick', 'sex', 'cum', 'porn', 'nude', 'hentai', 'fap', 'boobs', 'cummed', 'ballsack', 'cumming', 'fapped', 'fapping', 'vagina', 'erotica', 'fingering', 'g-spot', 'kock', 'vaginal', 'oral', 'titty', 'gore', 'anal', 'blowjob', 'handjob', 'boob', 'butthole', 'cocks', 'cumshot', 'cumshots', 'cunnilingus', 'dildo', 'doggystyle', 'nigga', 'nigger', 'bitches', 'rape', 'semen', 'testicles', 'titties', 'penis', 'creampie', 'onlyfans', 'faggot', 'cp', 'milf', 'r34', 'rule34', 'seduce', 'lewd', 'coems', 'cock', 'boner', 'ph', 'pornhub', 'slut', 'Whore', 'faggot', 'jack off', 'jacking off', 'orgasm', 'orgy', 'yiff', 'yaoi', 'smegma', 'condom', 'prick', 'urethra', 'bollocks', 'deepthroat', 'fornicating', 'erection', 'kink', 'hitler', '9/11', 'cunt', 'nazi', 'bukkake', 'fuck', 'fucking', 'shit', 'shitting', 'fucks', 'shits' ];
 
 // Return every single function in this file for use by other commands and files.
 module.exports = {
@@ -152,4 +155,5 @@ module.exports = {
     interactionAuthFunc,
     requestPlayerFunc,
     requestBeeFunc,
+    profanities,
 };

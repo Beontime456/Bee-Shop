@@ -19,10 +19,10 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('shop')
 		.setDescription('Check out the bee shop'),
-	async execute(responseMethod, interaction, isSlash) {
+	async execute(responseMethod, interaction) {
         try {
             // Identify if a command was initiated through slash or text.
-            const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+            const interactionAuth = await interactionAuthFunc(interaction);
             const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
             // Create shop embed
             let text = '';

@@ -22,12 +22,14 @@ module.exports = {
                 .setDescription('How much money to bet.')
                 .setRequired(true),
         ),
-    async execute(responseMethod, interaction, isSlash, args) {
+    async execute(responseMethod, interaction, args) {
         // Determine command execution type and therefore where arguments are stored
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
-        const coinChoice = isSlash ? interaction.options.getString('choice') : args[0]?.toLowerCase();
-        const amountOfMoney = isSlash ? interaction.options.getInteger('money') : parseInt(args[1]);
+        const interactionAuth = await interactionAuthFunc(interaction);
+        let coinChoice = interaction.isCommand?.() ? interaction.options.getString('choice') : args[0]?.toLowerCase();
+        const amountOfMoney = interaction.isCommand?.() ? interaction.options.getInteger('money') : parseInt(args[1]);
         // Make sure arguments pass checks (i.e coinChoice being heads or tails)
+        if (coinChoice === 'h') { coinChoice = 'heads'; }
+        else if (coinChoice === 't') { coinChoice = 'tails'; }
         if (!coinChoice || (coinChoice !== 'heads' && coinChoice !== 'tails')) { return responseMethod('You must choose between heads or tails!'); }
         if (isNaN(amountOfMoney)) { return responseMethod('You must specify an amount of money!'); }
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });

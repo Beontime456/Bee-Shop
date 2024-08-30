@@ -21,10 +21,10 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('prestige')
 		.setDescription('Prestige, clearing your bees and money but providing bonuses.'),
-	async execute(responseMethod, interaction, isSlash) {
+	async execute(responseMethod, interaction) {
         try {
             // Checks if the command was initiated through slash or text.
-            const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+            const interactionAuth = await interactionAuthFunc(interaction);
             const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
             let prestigeEmbed = undefined;
             const prestigeLevelReq = Math.floor(20 * Math.pow(1.2, (findplayer.get('prestiges') + 1)));

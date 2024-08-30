@@ -8,13 +8,11 @@ const {
     checkNameCompliance,
     interactionAuthFunc,
     requestBeeFunc,
+    profanities,
 } = require('C:/Bee Shop/universalmodule.js');
 
 playerinformation.sync();
 playerbees.sync();
-
-// Profanity filter
-const profanities = ['dick', 'sex', 'cum', 'porn', 'nude', 'hentai', 'fap', 'boobs', 'cummed', 'ballsack', 'cumming', 'fapped', 'fapping', 'vagina', 'erotica', 'fingering', 'g-spot', 'kock', 'vaginal', 'oral', 'titty', 'gore', 'anal', 'blowjob', 'handjob', 'boob', 'butthole', 'cocks', 'cumshot', 'cumshots', 'cunnilingus', 'dildo', 'doggystyle', 'nigga', 'nigger', 'bitches', 'rape', 'semen', 'testicles', 'titties', 'penis', 'creampie', 'onlyfans', 'faggot', 'cp', 'milf', 'r34', 'rule34', 'seduce', 'lewd', 'coems', 'cock', 'boner', 'ph', 'pornhub', 'slut', 'Whore', 'faggot', 'jack off', 'jacking off', 'orgasm', 'orgy', 'yiff', 'yaoi', 'smegma', 'condom', 'prick', 'urethra', 'bollocks', 'deepthroat', 'fornicating', 'erection', 'kink', 'hitler', '9/11', 'cunt', 'nazi', 'bukkake', 'fuck', 'fucking', 'shit', 'shitting', 'fucks', 'shits' ];
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -48,10 +46,10 @@ module.exports = {
             options.map(choice => ({ name: choice, value: choice })),
         );
     },
-	async execute(interaction, isSlash, args) {
+	async execute(interaction, args) {
         // Determine command execution type and therefore where arguments are stored
-        const requestbee = await requestBeeFunc(isSlash, interaction, args);
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+        const requestbee = await requestBeeFunc(interaction, args);
+        const interactionAuth = await interactionAuthFunc(interaction);
         // Find the player and check if the bee they are trying to buy is in the shop or even exists
         const findBee = await playerbees.findOne({ where: { beeName: requestbee } });
         if (findBee === null) { return await interaction.reply('You don\'t have a bee named this!'); }

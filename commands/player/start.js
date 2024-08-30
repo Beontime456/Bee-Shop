@@ -13,9 +13,9 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('start')
 		.setDescription('Begin your journey.'),
-	async execute(responseMethod, interaction, isSlash) {
+	async execute(responseMethod, interaction) {
         // Identify if a command was initiated through slash or text.
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+        const interactionAuth = await interactionAuthFunc(interaction);
         // Attempt to load player data and act accordingly
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
         if (findplayer) { return responseMethod('Oops, it appears you already have started!'); }

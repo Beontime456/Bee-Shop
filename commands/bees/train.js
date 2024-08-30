@@ -46,10 +46,10 @@ module.exports = {
             options.map(choice => ({ name: choice, value: choice })),
         );
     },
-	async execute(responseMethod, interaction, isSlash, args) {
+	async execute(responseMethod, interaction, args) {
         // Determine command execution type and therefore where arguments are stored
-        const requestbee = await requestBeeFunc(isSlash, interaction, args);
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
+        const requestbee = await requestBeeFunc(interaction, args);
+        const interactionAuth = await interactionAuthFunc(interaction);
 
         // Find the bee they are referring to and check if it exists.
         const findBee = await playerbees.findOne({ where: { beeName: requestbee, playerid: interactionAuth.id } });
@@ -64,7 +64,7 @@ module.exports = {
             const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
             let totalMoney = 0;
             const lastArg = parseInt(response.first());
-            if (!isNaN(lastArg)) { args.pop();}
+            if (!isNaN(lastArg)) { args.pop(); }
             else { return response.first().reply('You must specify a number!'); }
             if (findBee.get('beeLevel') + lastArg > Math.floor(findBeeIncrease.get('levelCapMultiplier') * 10 * (0.1 * findplayer.get('prestiges') + 1))) { return response.first().reply('Traning your bee this much would put it over the level limit.'); }
             for (let count = findBee.get('beeLevel'); count < findBee.get('beeLevel') + lastArg; count++) { totalMoney += Math.floor((50 * count) * (findBeeIncrease.get('beeBaseIncrease') / 1.33) + 100); }

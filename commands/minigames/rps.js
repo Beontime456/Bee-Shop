@@ -18,10 +18,10 @@ module.exports = {
                 .setDescription('How much money to bet.')
                 .setRequired(true),
         ),
-    async execute(responseMethod, interaction, isSlash, args) {
+    async execute(responseMethod, interaction, args) {
         // Determine command execution type and therefore where arguments are stored
-        const interactionAuth = await interactionAuthFunc(isSlash, interaction);
-        const amountOfMoney = isSlash ? interaction.options.getInteger('money') : parseInt(args[0]);
+        const interactionAuth = await interactionAuthFunc(interaction);
+        const amountOfMoney = interaction.isCommand?.() ? interaction.options.getInteger('money') : parseInt(args[0]);
         // Make sure arguments pass checks
         if (isNaN(amountOfMoney)) { return responseMethod('You must specify an amount of money!'); }
         const findplayer = await playerinformation.findOne({ where: { playerid: interactionAuth.id } });
